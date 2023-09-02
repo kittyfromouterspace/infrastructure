@@ -51,15 +51,17 @@
     state: directory
 
 - name: Set authorized keys
-  authorized_key:
+  ansible.posix.authorized_key:
     user: "{{ host_sshd_user }}"
     key: "{{ item }}"
+    state: present
   with_items:
     - "{{ ssh_keys }}"
 
 - name: Set root keys
-  authorized_key:
+  ansible.posix.authorized_key:
     user: root
     key: "{{ item }}"
+    state: present
   with_items:
     - "{{ ssh_keys }}"

@@ -1,6 +1,7 @@
 ---
 
 - import_tasks: user.yml
+- import_tasks: ssh.yml
 
 - name: Install base packages
   ansible.builtin.package:

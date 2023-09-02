@@ -1,0 +1,9 @@
+---
+
+- name: restart sshd
+  service: name=ssh state=restarted
+  when: ansible_facts['os_family'] != 'FreeBSD'
+
+- name: restart sshd 
+  service: name=sshd state=restarted
+  when: ansible_facts['os_family'] == 'FreeBSD'
