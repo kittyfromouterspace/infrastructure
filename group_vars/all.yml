@@ -1,0 +1,9 @@
+---
+
+host_sshd_port: 2234
+host_sshd_user: ansible
+
+ssh_keys:
+  - https://github.com/norbu09.keys
+  - https://github.com/Levin.keys
+
