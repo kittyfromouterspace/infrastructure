@@ -1,0 +1,45 @@
+---
+
+- name: Update comment for root user in user database
+  user:
+    name: 'root'
+    password: '*'
+    comment: 'root .at {{ hostname }}'
+  when: is_physical_node is defined
+
+- name: create ansible user
+  user:
+    name: "{{ host_sshd_user }}"
+    state: present
+    groups: wheel
+    append: true
+    create_home: true
+    shell: /bin/sh
+
+- name: Add sudo rules for ssh user on jail host
+  template:
+    src: 'sudoers.user.j2'
+    dest: '/usr/local/etc/sudoers.d/{{ host_sshd_user }}'
+    validate: 'visudo -cf %s'
+
+- name: Create .ssh directry for ssh user
+  file:
+    path: '/home/{{ host_sshd_user }}/.ssh'
+    owner: '{{ host_sshd_user }}'
+    group: '{{ host_sshd_user }}'
+    mode: 0700
+    state: directory
+
+- name: Set authorized keys
+  authorized_key:
+    user: "{{ host_sshd_user }}"
+    key: "{{ item }}"
+  with_items:
+    - "{{ ssh_keys }}"
+
+- name: Set root keys
+  authorized_key:
+    user: root
+    key: "{{ item }}"
+  with_items:
+    - "{{ ssh_keys }}"
