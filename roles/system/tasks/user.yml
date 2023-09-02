@@ -28,11 +28,19 @@
   when: ansible_facts['os_family'] != 'FreeBSD'
 
 
-- name: Add sudo rules for ssh user on jail host
+- name: Add sudo rules for ssh user on FreeBSD host
   template:
     src: 'sudoers.user.j2'
     dest: '/usr/local/etc/sudoers.d/{{ host_sshd_user }}'
     validate: 'visudo -cf %s'
+  when: ansible_facts['os_family'] == 'FreeBSD'
+
+- name: Add sudo rules for ssh user on Linux host
+  template:
+    src: 'sudoers.user.j2'
+    dest: '/etc/sudoers.d/{{ host_sshd_user }}'
+    validate: 'visudo -cf %s'
+  when: ansible_facts['os_family'] != 'FreeBSD'
 
 - name: Create .ssh directry for ssh user
   file:
