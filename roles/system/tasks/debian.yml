@@ -1,5 +1,12 @@
 ---
 
+- name: Install OS specific base packages
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - ufw
+
 - name: create ansible user
   user:
     name: "{{ host_sshd_user }}"
@@ -7,7 +14,7 @@
     groups: root
     append: true
     create_home: true
-    shell: /bin/sh
+    shell: /bin/bash
 
 - name: Add sudo rules for ssh user
   template:

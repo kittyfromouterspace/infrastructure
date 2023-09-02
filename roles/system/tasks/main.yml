@@ -8,7 +8,6 @@
     - htop
     - lsof
     - sudo
-    - vim
     - htop
 
 - name: import OS specific tasks
@@ -81,9 +80,7 @@
     name: '{{ timezone }}'
 
 # Ensure locale de_DE exists.
-- locale_gen:
-    name: '{{ locale }}'
-    state: present
+# - locale_gen:
+#     name: '{{ locale }}'
+#     state: present
 
-- name: Vim is my main editor
-  alternatives: name=editor path={{ editor }}

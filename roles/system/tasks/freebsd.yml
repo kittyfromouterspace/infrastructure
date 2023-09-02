@@ -9,6 +9,13 @@
   with_items:
     - {regexp: '^\s+url:', line: '  url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest",'}
 
+- name: Install OS specific base packages
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - vim
+
 - name: configure rc.conf
   community.general.sysrc:
     name: "{{ item.name }}"
@@ -29,23 +36,7 @@
     value: "{{ item.value }}"
   with_items:
     - {name: "syslogd_flags", value: "-ss"}
-    - {name: "pf_enable", value: "YES"}
-    - {name: "pf_config", value: "/etc/pf.conf"}
-    - {name: "pflog_enable", value: "YES"}
-    - {name: "gateway_enable", value: "YES"}
     - {name: "accounting_enable", value: "YES"}
-  when: is_jail is not defined
-
-
-- name: configure pf
-  template:
-    src: 'pf.conf.j2'
-    dest: "/etc/pf.conf"
-    owner: 'root'
-    group: 'wheel'
-    mode: 0755
-  notify:
-    - reload pf
   when: is_jail is not defined
 
 - name: restart syslogd
