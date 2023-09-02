@@ -5,15 +5,11 @@ all:
     server:
       hosts:
         phantasia:
-          #ansible_user: "{{ host_sshd_user }}"
-          ansible_user: root # only used for boot-strapping
+          ansible_user: "{{ host_sshd_user }}"
           ansible_host: 95.179.135.97
-          ansible_port: 22
-          #ansible_port: "{{ host_sshd_port }}"
+          ansible_port: "{{ host_sshd_port }}"
           ansible_python_interpreter: /usr/local/bin/python3.9
         baerendreck:
-          ansible_user: root # only used for boot-strapping
-          #ansible_user: "{{ host_sshd_user }}"
+          ansible_user: "{{ host_sshd_user }}"
           ansible_host: 68.183.12.8
-          ansible_port: 22
-          #ansible_port: "{{ host_sshd_port }}"
+          ansible_port: "{{ host_sshd_port }}"

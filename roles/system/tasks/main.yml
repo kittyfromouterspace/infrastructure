@@ -18,10 +18,7 @@
   with_items:
     - htop
     - lsof
+    - sudo
 
-- name: UFW - Allow SSH connections
-  ufw:
-    rule: allow
-    proto: tcp
-    port: 2234
-
+- import_tasks: user.yml
+- import_tasks: ssh.yml
