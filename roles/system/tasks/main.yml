@@ -1,13 +1,5 @@
 ---
 
-- name: import OS specific tasks
-  import_tasks: freebsd.yml
-  when: ansible_facts['os_family'] == 'FreeBSD'
-
-- name: import OS specific tasks
-  import_tasks: ubuntu.yml
-  when: ansible_facts['os_family'] == 'Ubuntu'
-
 - name: Install base packages
   ansible.builtin.package:
     name: '{{ item }}'
@@ -17,5 +9,68 @@
     - lsof
     - sudo
 
-- import_tasks: user.yml
-- import_tasks: ssh.yml
+- name: import OS specific tasks
+  import_tasks: freebsd.yml
+  when: ansible_facts['os_family'] == 'FreeBSD'
+
+- name: import OS specific tasks
+  import_tasks: ubuntu.yml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Adjust sshd (allowed user, authentication, ..)
+  lineinfile:
+    dest: '/etc/ssh/sshd_config'
+    state: present
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    insertbefore: '^#Port'
+  with_items:
+  - { regexp: '^Port', line: 'Port {{ host_sshd_port }}' }
+  - { regexp: '^Protocol', line: 'Protocol 2' }
+  - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+    #  - { regexp: '^AllowUsers', line: 'AllowUsers {{ host_sshd_user }}'}
+  - { regexp: '^MaxStartups', line: 'MaxStartups 3:50:5' }
+  - { regexp: '^MaxAuthTries', line: 'MaxAuthTries 5' }
+  - { regexp: '^LoginGraceTime', line: 'LoginGraceTime 5' }
+  - { regexp: '^ChallengeResponseAuthentication',
+      line: 'ChallengeResponseAuthentication no' }
+  - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
+  - { regexp: '^UseDNS', line: 'UseDNS no' }
+  - { regexp: '^UsePAM', line: 'UsePAM no' }
+  - { regexp: '^GSSAPIAuthentication', line: 'GSSAPIAuthentication no' }
+  - { regexp: '^ClientAliveInterval', line: 'ClientAliveInterval 30' }
+  notify:
+    - restart sshd
+
+- name: Update comment for root user in user database
+  user:
+    name: 'root'
+    password: '*'
+    comment: 'root .at {{ hostname }}'
+  when: is_jail is not defined
+
+- name: Create .ssh directry for ssh user
+  file:
+    path: '/home/{{ host_sshd_user }}/.ssh'
+    owner: '{{ host_sshd_user }}'
+    group: '{{ host_sshd_user }}'
+    mode: 0700
+    state: directory
+
+- name: Set authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ host_sshd_user }}"
+    key: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ ssh_keys }}"
+
+- name: Set root keys
+  ansible.posix.authorized_key:
+    user: root
+    key: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ ssh_keys }}"
+
+

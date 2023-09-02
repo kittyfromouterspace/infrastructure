@@ -1,0 +1,16 @@
+---
+
+- name: create ansible user
+  user:
+    name: "{{ host_sshd_user }}"
+    state: present
+    groups: wheel
+    append: true
+    create_home: true
+    shell: /bin/sh
+
+- name: Add sudo rules for ssh user
+  template:
+    src: 'sudoers.user.j2'
+    dest: '/usr/local/etc/sudoers.d/{{ host_sshd_user }}'
+    validate: 'visudo -cf %s'

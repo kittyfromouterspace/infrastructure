@@ -1,0 +1,23 @@
+---
+
+- name: create ansible user
+  user:
+    name: "{{ host_sshd_user }}"
+    state: present
+    groups: root
+    append: true
+    create_home: true
+    shell: /bin/sh
+
+- name: Add sudo rules for ssh user
+  template:
+    src: 'sudoers.user.j2'
+    dest: '/etc/sudoers.d/{{ host_sshd_user }}'
+    validate: 'visudo -cf %s'
+
+- name: UFW - Allow SSH connections
+  ufw:
+    rule: allow
+    port: '{{ host_sshd_port }}'
+    proto: tcp
+
