@@ -9,3 +9,4 @@ versions for project specific roles.
 To use the base playbook, you will need to install ansible.posix as well as ...W
 -> ansible-galaxy collection install ansible.posix
 -> ansible-galaxy collection install community.general
+-> ansible-galaxy collection install community.general

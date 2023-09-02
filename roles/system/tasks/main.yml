@@ -75,12 +75,12 @@
     - "{{ ssh_keys }}"
 
 # Set Timezone
-- name: set timezone to Europe/Berlin
+- name: Set timezone to Europe/Berlin
   timezone:
-    name: '{{ timezone }}'
+    name: Europe/Berlin     
 
-# Ensure locale de_DE exists.
-# - locale_gen:
-#     name: '{{ locale }}'
-#     state: present
-
+# Ensure locale de_DE exists. 
+- name: setting location
+  community.general.locale_gen:
+    name: de_DE.UTF-8
+    state: present
