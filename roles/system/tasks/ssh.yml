@@ -24,10 +24,27 @@
   - { regexp: '^GSSAPIAuthentication', line: 'GSSAPIAuthentication no' }
   - { regexp: '^ClientAliveInterval', line: 'ClientAliveInterval 30' }
   notify:
-    - restart sshd
+    - restart host sshd
+
+
+# UFW Firewall Setup
+- name: UFW - Allow SSH connections
+  ufw:
+    rule: allow
+    port: '{{ host_sshd_port }}'
+    proto: tcp
+  when: ansible_facts['os_family'] != 'FreeBSD'
+
+
 
 # FIXME: enable host sshd port on Linux and write rule for FreeBSD
 # - name: UFW - Allow SSH connections
   # ufw:
     # rule: allow
     # name: OpenSSH
+# - name: UFW - Allow SSH connections
+#   ufw:
+#     rule: allow
+#     name: OpenSSH
+#   when: ansible_facts['os_family'] == 'FreeBSD'
+

@@ -10,3 +10,10 @@
   with_items:
     - htop
     - lsof
+
+- name: UFW - Allow SSH connections
+  ufw:
+    rule: allow
+    proto: tcp
+    port: 2234
+
