@@ -21,3 +21,8 @@
     port: '{{ host_sshd_port }}'
     proto: tcp
 
+- name: UFW - Deny all other incoming traffic by default
+  ufw:
+    state: enabled
+    policy: deny
+    direction: incoming

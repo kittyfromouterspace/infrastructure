@@ -8,13 +8,15 @@
     - htop
     - lsof
     - sudo
+    - vim
+    - htop
 
 - name: import OS specific tasks
   import_tasks: freebsd.yml
   when: ansible_facts['os_family'] == 'FreeBSD'
 
 - name: import OS specific tasks
-  import_tasks: ubuntu.yml
+  import_tasks: debian.yml
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Adjust sshd (allowed user, authentication, ..)
@@ -73,4 +75,15 @@
   with_items:
     - "{{ ssh_keys }}"
 
+# Set Timezone
+- name: set timezone to Europe/Berlin
+  timezone:
+    name: '{{ timezone }}'
 
+# Ensure locale de_DE exists.
+- locale_gen:
+    name: '{{ locale }}'
+    state: present
+
+- name: Vim is my main editor
+  alternatives: name=editor path={{ editor }}

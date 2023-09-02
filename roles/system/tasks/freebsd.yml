@@ -1,5 +1,74 @@
 ---
 
+- name: Adjust pkg config
+  lineinfile:
+    dest: '/etc/pkg/FreeBSD.conf'
+    state: present
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+    - {regexp: '^\s+url:', line: '  url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest",'}
+
+- name: configure rc.conf
+  community.general.sysrc:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items:
+    - {name: "hostname", value: "{{ hostname }}"}
+    - {name: "clear_tmp_enable", value: "YES"}
+    - {name: "dumpdev", value: "AUTO"}
+    - {name: "sendmail_enable", value: "NONE"}
+    - {name: "firewall_enable", value: "YES"}
+    - {name: "firewall_logging", value: "YES"}
+    - {name: "firewall_type", value: "open"}
+      #- {name: "telegraf_enable", value: "YES"}
+
+- name: configure rc.conf - server
+  community.general.sysrc:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items:
+    - {name: "syslogd_flags", value: "-ss"}
+    - {name: "pf_enable", value: "YES"}
+    - {name: "pf_config", value: "/etc/pf.conf"}
+    - {name: "pflog_enable", value: "YES"}
+    - {name: "gateway_enable", value: "YES"}
+    - {name: "accounting_enable", value: "YES"}
+  when: is_jail is not defined
+
+
+- name: configure pf
+  template:
+    src: 'pf.conf.j2'
+    dest: "/etc/pf.conf"
+    owner: 'root'
+    group: 'wheel'
+    mode: 0755
+  notify:
+    - reload pf
+  when: is_jail is not defined
+
+- name: restart syslogd
+  service:
+    name: syslogd
+    state: restarted
+  when: is_jail is not defined
+
+- name: stop sendmail
+  service:
+    name: sendmail
+    state: stopped
+
+- name: configure boot loader.conf
+  lineinfile:
+    dest: '/boot/loader.conf'
+    state: present
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+  - { regexp: '^autoboot_delay', line: 'autoboot_delay="3"' }
+  when: is_jail is not defined
+
 - name: create ansible user
   user:
     name: "{{ host_sshd_user }}"
