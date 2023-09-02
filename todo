@@ -1,0 +1,6 @@
+general infrastructure base role that is OS independent
+project specific overlay
+secure secret storage (most probably vault)
+OS independent package handling everywhere
+VPN setup (wireguard or similar)
+standardised logging/metrics handling
