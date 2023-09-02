@@ -4,10 +4,8 @@ host_sshd_port: 2234
 host_sshd_user: ansible
 
 ssh_keys:
-  - https://github.com/norbu09.keys
-  - https://github.com/Levin.keys
-
-    
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAIMViZa8jce77Ra/Zo+AwpGJbL2gkjjvyD+nT3AHoxi # Lenz
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICjbOSKGEG1qwcNPNMKtXNl+E8JPFAcpFnWvVz1uoEnc # Levin
 
 timezone: UTC
 locale: en_US.UTF-8
