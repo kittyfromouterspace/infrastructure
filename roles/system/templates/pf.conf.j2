@@ -1,0 +1,26 @@
+{{ ansible_managed | comment }}
+
+ext_if="{{ jail_host_netif }}"
+int_if="bridge0"
+localnet = $int_if:network
+
+
+set skip on lo
+
+scrub in
+
+nat-anchor pot-nat
+rdr-anchor "pot-rdr/*"
+
+nat on $ext_if from $localnet to any -> ($ext_if)
+
+block in
+pass out
+
+pass quick on $int_if no state
+antispoof quick for { lo $int_if }
+
+pass in on $ext_if proto tcp to ($ext_if) port {{ host_sshd_port }}
+pass in on $ext_if proto tcp to ($ext_if) port http
+pass in on $ext_if proto tcp to ($ext_if) port https
+pass in on $ext_if inet proto icmp from any to ($ext_if) icmp-type { unreach, redir, timex }
