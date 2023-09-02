@@ -24,7 +24,7 @@
   - { regexp: '^GSSAPIAuthentication', line: 'GSSAPIAuthentication no' }
   - { regexp: '^ClientAliveInterval', line: 'ClientAliveInterval 30' }
   notify:
-    - restart host sshd
+    - restart sshd
 
 
 # UFW Firewall Setup
