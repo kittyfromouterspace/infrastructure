@@ -1,5 +1,13 @@
 ---
 
+- name: import OS specific tasks
+  import_tasks: freebsd.yml
+  when: ansible_facts['os_family'] == 'FreeBSD'
+
+- name: import OS specific tasks
+  import_tasks: ubuntu.yml
+  when: ansible_facts['os_family'] == 'Ubuntu'
+
 - import_tasks: user.yml
 - import_tasks: ssh.yml
 
