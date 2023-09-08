@@ -1,12 +1,5 @@
 ---
 
-- name: Install OS specific base packages
-  ansible.builtin.package:
-    name: '{{ item }}'
-    state: latest
-  with_items:
-    - ufw
-
 - name: create ansible user
   user:
     name: "{{ host_sshd_user }}"
@@ -14,13 +7,26 @@
     groups: root
     append: true
     create_home: true
-    shell: /bin/bash
+    shell: /bin/sh
 
 - name: Add sudo rules for ssh user
   template:
     src: 'sudoers.user.j2'
     dest: '/etc/sudoers.d/{{ host_sshd_user }}'
     validate: 'visudo -cf %s'
+
+# Ensure locale de_DE exists. 
+- name: setting location
+  community.general.locale_gen:
+    name: '{{ locale }}'
+    state: present
+  notify: restart time
+
+# TODO: do i need this ?
+# - name: restart timedatectl
+#   service:
+#     name: timedatectl
+#     state: restarted
 
 - name: UFW - Allow SSH connections
   ufw:

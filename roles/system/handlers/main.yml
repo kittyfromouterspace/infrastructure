@@ -17,3 +17,16 @@
     name: syslogd
     state: restarted
   when: ansible_facts['os_family'] == 'FreeBSD'
+
+- name: restart time
+  service: 
+    name: timedatectl
+    state: restarted
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: restart time
+  service: 
+    name: "sudo service ntpd restart"
+    state: restarted
+  when: ansible_facts['os_family'] == 'FreeBSD'
+

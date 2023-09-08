@@ -79,8 +79,4 @@
   timezone:
     name: Europe/Berlin     
 
-# Ensure locale de_DE exists. 
-- name: setting location
-  community.general.locale_gen:
-    name: de_DE.UTF-8
-    state: present
+

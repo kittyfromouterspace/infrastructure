@@ -1,0 +1,11 @@
+---
+
+- name: restart bsd timer
+  hosts: baerendreck
+
+  # FIXME: see for further impolementation
+  handlers:
+    - name: Restart Time Component
+      ansible.builtin.service:
+        name: /etc/localtime
+        state: restarted
