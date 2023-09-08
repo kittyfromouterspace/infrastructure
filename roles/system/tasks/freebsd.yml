@@ -75,3 +75,15 @@
     src: 'sudoers.user.j2'
     dest: '/usr/local/etc/sudoers.d/{{ host_sshd_user }}'
     validate: 'visudo -cf %s'
+
+# ntp set to local timezone
+- name: Set timezone to Europe/Amsterdam
+  service:
+    job: "cp -v /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime"
+    
+
+
+# for restarting the crond jobs, try : /etc/init.d/crond restart
+- name: Restart crond services
+  service: 
+    job: "/etc/rc.d/cron restart"

@@ -39,3 +39,17 @@
     state: enabled
     policy: deny
     direction: incoming
+
+
+# restart ntp service      
+- name: Restart service timedatectl, in all cases
+  service:
+    name: timedatectl
+    state: restarted
+
+# restart crond jobs to match the new timeframe
+- name: Restart crond services
+  ansible.builtin.cron:
+    name: "restart crond"
+    special_time: "reboot"
+    job: "sudo service cron restart"
