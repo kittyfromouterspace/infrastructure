@@ -10,3 +10,4 @@ To use the base playbook, you will need to install ansible.posix as well as ...W
 -> ansible-galaxy collection install ansible.posix
 -> ansible-galaxy collection install community.general
 -> ansible-galaxy collection install community.general
+-> pip install parselib (user/pw creation)

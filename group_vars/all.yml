@@ -9,3 +9,4 @@ ssh_keys:
 
 locale: en_US.UTF-8
 editor: vim
+timezone: Europe/Berlin

@@ -1,5 +1,9 @@
 ---
 
+- name: Create random string 1
+  shell: tr -dc A-Za-z0-9 </dev/urandom | head -c 20 ; echo ''
+  register: password
+
 - name: create ansible user
   user:
     name: "{{ host_sshd_user }}"
@@ -7,6 +11,7 @@
     groups: root
     append: true
     create_home: true
+    password: "{{ password.stdout | password_hash('sha512') }}"
     shell: /bin/sh
 
 - name: Add sudo rules for ssh user
@@ -42,10 +47,15 @@
 
 
 # restart ntp service      
-- name: Restart service timedatectl, in all cases
-  service:
-    name: timedatectl
-    state: restarted
+- name: Stop timedatectl 
+  ansible.builtin.command: systemctl stop systemd-timesyncd.service
+
+- name: Set timedatectl 
+  ansible.builtin.command: timedatectl set-timezone "{{ timezone }}"
+
+
+- name: Start timedatectl 
+  ansible.builtin.command: systemctl start systemd-timesyncd.service
 
 # restart crond jobs to match the new timeframe
 - name: Restart crond services
