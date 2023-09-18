@@ -1,0 +1,47 @@
+---
+
+
+- name: Install HAProxy packages
+  pkgng:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - haproxy
+
+- name: create HAProxy config
+  template:
+    dest: /usr/local/etc/haproxy.conf
+    src: haproxy.conf.j2
+    owner: root
+    group: wheel
+    mode: '0600'
+  notify:
+    - reload haproxy
+
+
+- name: import OS specific tasks
+  import_tasks: freebsd.yml
+  when: ansible_facts['os_family'] == 'FreeBSD'
+
+- name: import OS specific tasks
+  import_tasks: debian.yml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Configure HAProxy service
+  community.general.sysrc:
+    name: haproxy_enable
+    value: "YES"
+
+- name: Start service HAProxy, if not started
+  ansible.builtin.service:
+    name: haproxy
+    state: started
+    enabled: yes
+
+
+- name: Start service HAProxy, if not started
+  ansible.builtin.service:
+    name: haproxy
+    state: started
+    enabled: yes
+

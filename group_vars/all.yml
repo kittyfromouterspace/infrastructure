@@ -10,3 +10,10 @@ ssh_keys:
 locale: en_US.UTF-8
 editor: vim
 timezone: Europe/Berlin
+
+
+
+proxy: 
+  - {host: emails.eco, key: emails_eco, port: 4001, internal: "{{ hostvars['emails_eco'].ansible_host }}" }
+  - {host: termitelab.com, key: termitelab, port: 4002, internal: "{{ hostvars['termitelab'].ansible_host }}" }
+

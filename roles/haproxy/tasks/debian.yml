@@ -1,0 +1,14 @@
+---
+
+- name: config HAProxy Ubuntu
+  ansible.builtin.template: 
+    src: haproxy.conf.j2
+    dest: /etc/haproxy/haproxy.cfg
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Start HAProxy service Ubuntu
+  service:
+    name: haproxy
+    state: started
+    enabled: true
+  when: ansible_facts['os_family'] == 'Debian'

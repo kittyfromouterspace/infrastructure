@@ -1,0 +1,9 @@
+---
+ 
+# debian/ubuntu specific - name: Add stretch-backports
+
+- name: configure HAProxy
+  import_tasks: server.yml
+  when: needs_haproxy is defined
+
+

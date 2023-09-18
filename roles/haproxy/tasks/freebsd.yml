@@ -1,0 +1,17 @@
+---
+
+
+- name: config HAProxy FreeBSD
+  ansible.builtin.template: 
+    src: haproxy.conf.j2
+    dest: /usr/local/etc/haproxy.conf
+
+- name: Start HAProxy service FreeBSD
+  service:
+    name: "/usr/local/etc/rc.d/haproxy start"
+    state: started
+    enabled: true
+
+
+
+

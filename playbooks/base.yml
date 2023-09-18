@@ -2,4 +2,5 @@
 - hosts: server
   roles:
     - system
+    - haproxy
 
