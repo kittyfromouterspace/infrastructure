@@ -1,6 +1,5 @@
 ---
 
-
 - name: Install HAProxy packages
   pkgng:
     name: '{{ item }}'

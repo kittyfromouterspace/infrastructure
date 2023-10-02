@@ -1,0 +1,61 @@
+---
+
+#- name: create storage directory
+#  ansible.builtin.file: 
+#    path: /vault/data
+#    state: directory
+#    mode: '0755'
+
+- name: run apt-get update
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: copy vault setup file to server
+  ansible.builtin.copy:
+    src: ../templates/vault_setup.sh
+    dest: /vault_setup.sh
+
+- name: install vault on ubuntu
+  command: sh /vault_setup.sh
+
+- name: copy vault server file to server
+  ansible.builtin.copy:
+    src: ../templates/vault_server.sh
+    dest: /vault_server.sh
+
+- name: copy vault setup file to server
+  ansible.builtin.copy:
+    src: ../templates/config.hcl
+    dest: /config.hcl
+
+- name: start vault server
+  command: sh /vault_server.sh
+
+- name: copy vault secret file to server
+  ansible.builtin.copy:
+    src: ../templates/vault_secret.sh
+    dest: /vault_secret.sh
+
+- name: seal test vault
+  command: sh /vault_secret.sh
+    
+    #- name: deploy vault server
+    #command: sh ../templates/vault_server.sh
+
+    #- name: cd vault directory
+    #  command: cd vault
+
+    #- name: get dependencies
+  #  command: make bootstrap
+
+    #- name: build vault
+  #  command: make
+
+    #- name: transfer Vault storage config script
+  #  template: 
+    #    src: 'config.hcl'
+      #    dest: '/vault/'
+
+
+      #- name: start Vault server
+  #  command: vault server -config=/vault/config.hcl
