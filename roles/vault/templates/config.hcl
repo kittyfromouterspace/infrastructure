@@ -3,10 +3,15 @@ cluster_addr  = "https://127.0.0.1:8201"
 api_addr      = "https://127.0.0.1:8200"
 disable_mlock = true
 
-storage "raft" {
-  address = "127.0.0.1:8500"
-  path    = "vault/"
-}
+storage "file" {
+
+  path    = "/vault/storage/data"
+} 
+
+#storage "raft" {
+# address = "127.0.0.1:8500"
+#  path    = "vault/"
+#}
 
 #listener "tcp" {
 #  address       = "127.0.0.1:8200"

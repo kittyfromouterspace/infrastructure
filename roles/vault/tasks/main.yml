@@ -5,58 +5,46 @@
 #    path: /vault/data
 #    state: directory
 #    mode: '0755'
+#use package for installs, (see latest for packages -> auto update) -> see system 
+#
+#
+# handler (systemctl statt vault_server.sh)
+#   notify:
+#    - restart sshd
+#   ==> restart vault on config change 
+- name: Creating vault user group
+  group: 
+    name: "{{ vault_group }}"
+  become: true
 
-- name: run apt-get update
-  ansible.builtin.apt:
-    update_cache: yes
-  when: ansible_facts['os_family'] == 'Debian'
+- name: Creating vault user
+  user:
+    name: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "vault nologin User"
+    createhome: "no"
+    state: present
 
-- name: copy vault setup file to server
-  ansible.builtin.copy:
-    src: ../templates/vault_setup.sh
-    dest: /vault_setup.sh
-
-- name: install vault on ubuntu
-  command: sh /vault_setup.sh
-
-- name: copy vault server file to server
-  ansible.builtin.copy:
-    src: ../templates/vault_server.sh
-    dest: /vault_server.sh
-
-- name: copy vault setup file to server
-  ansible.builtin.copy:
+- name: config file copy
+  template:
     src: ../templates/config.hcl
-    dest: /config.hcl
+    dest: /
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
 
-- name: start vault server
-  command: sh /vault_server.sh
+- name: import OS specific tasks
+  import_tasks: freebsd.yml
+  when: ansible_facts['os_family'] == 'FreeBSD'
 
-- name: copy vault secret file to server
-  ansible.builtin.copy:
-    src: ../templates/vault_secret.sh
-    dest: /vault_secret.sh
+- name: import OS specific tasks
+  import_tasks: debian.yml
+  when: ansible_facts['os_family'] == 'Debian'
+     
+  ## TODO: do i need this ?
+# - name: start vault
+#   service:
+#     name: vault => see if right
+#     state: started
 
-- name: seal test vault
-  command: sh /vault_secret.sh
-    
-    #- name: deploy vault server
-    #command: sh ../templates/vault_server.sh
-
-    #- name: cd vault directory
-    #  command: cd vault
-
-    #- name: get dependencies
-  #  command: make bootstrap
-
-    #- name: build vault
-  #  command: make
-
-    #- name: transfer Vault storage config script
-  #  template: 
-    #    src: 'config.hcl'
-      #    dest: '/vault/'
-
-
-      #- name: start Vault server
-  #  command: vault server -config=/vault/config.hcl

@@ -1,0 +1,13 @@
+---
+
+- name: Install base packages
+  ansible.builtin.package:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - vault
+
+
+- name: create vault jail on freebsd
+  shell: jail_vault_parameters="allow.mlock=1"
+

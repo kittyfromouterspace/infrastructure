@@ -1,0 +1,8 @@
+---
+
+
+- name: start vault dev server
+  shell: vault server -config=/config.hcl &
+  environment:
+    VAULT_ADDR: "http://127.0.0.1:8200"
+

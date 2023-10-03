@@ -1,0 +1,22 @@
+---
+
+- name: update npm
+  command: npm install npm@9 -g
+
+- name: clone repo if not previously cloned
+  git:
+    repo: https://github.com/louislam/uptime-kuma.git
+    dest: ~/
+    clone: yes
+    update: yes
+
+- name: transfer script to server
+  ansible.builtin.copy:
+    src: ../templates/
+    dest: /vault_secret.sh
+
+
+- name: run setup script for metrics
+  script: /metrics_setup.sh
+  
+
