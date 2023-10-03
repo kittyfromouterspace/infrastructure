@@ -1,3 +1,3 @@
 #!bin/bash
 
-vault kv put hello foo=world
+vault kv put hello foo=world 

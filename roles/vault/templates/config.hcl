@@ -1,4 +1,3 @@
-
 ui            = true
 cluster_addr  = "https://127.0.0.1:8201"
 api_addr      = "https://127.0.0.1:8200"
@@ -15,8 +14,8 @@ storage "raft" {
 # tls_key_file  = "/path/to/private-key.pem"
 #}
 
-telemetry {
-  statsite_address = "127.0.0.1:8125"
-  disable_hostname = true
-}
+#telemetry {
+#  statsite_address = "127.0.0.1:8125"
+#  disable_hostname = true
+#}
 
