@@ -24,6 +24,9 @@
 - name: start vault 
   shell: service vault start
 
+- name: initialize vault
+  shell: env VAULT_ADDR=http://10.10.0.33:8200 vault operator init
+
 - name: copy config.hcl 
   template: 
     src: ../templates/vault.hcl
