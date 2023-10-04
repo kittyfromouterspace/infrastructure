@@ -1,5 +1,13 @@
 ---
 
+
+- name: config file copy
+  template:
+    src: ../templates/vault.hcl
+    dest: /usr/local/etc/
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+
 - name: Install base packages
   ansible.builtin.package:
     name: '{{ item }}'
@@ -7,7 +15,19 @@
   with_items:
     - vault
 
-
 - name: create vault jail on freebsd
   shell: jail_vault_parameters="allow.mlock=1"
+
+- name: vault enable 
+  shell: sysrc vault_enable="YES" && sysrc vault_syslog_output_enable="YES"
+
+- name: start vault 
+  shell: service vault start
+
+- name: copy config.hcl 
+  template: 
+    src: ../templates/vault.hcl
+    dest: /usr/local/etc/vault.hcl
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
 

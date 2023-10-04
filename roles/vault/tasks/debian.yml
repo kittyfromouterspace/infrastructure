@@ -7,6 +7,40 @@
     update_cache: yes
     cache_valid_time: 86400
 
+- name: config file copy
+  template:
+    src: ../templates/vault.hcl
+    dest: /
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+
+- name: install gpg
+  apt:
+    name: gpg
+    state: latest
+
+- name: download the signing key 
+  shell: 
+    cmd: wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+ 
+- name: verify fingerprint
+  shell:
+    cmd: gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
+
+- name: add hashicorp repo
+  shell: 
+      cmd: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+- name: update system
+  shell:
+    cmd: sudo apt update
+
+- name: install vault
+  shell:
+    cmd: sudo apt install vault
+
+
+
 - name: vault.service file copy
   template:
     src: ../templates/vault.service
@@ -14,3 +48,9 @@
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
 
+
+#- name: restart vault
+#  ansible.builtin.systemd:
+#    state: restarted
+#    daemon_reload: true
+#   name: vault

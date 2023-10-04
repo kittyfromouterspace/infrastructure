@@ -27,13 +27,6 @@
     createhome: "no"
     state: present
 
-- name: config file copy
-  template:
-    src: ../templates/config.hcl
-    dest: /
-    owner: "{{ vault_user }}"
-    group: "{{ vault_group }}"
-
 - name: import OS specific tasks
   import_tasks: freebsd.yml
   when: ansible_facts['os_family'] == 'FreeBSD'
@@ -42,9 +35,11 @@
   import_tasks: debian.yml
   when: ansible_facts['os_family'] == 'Debian'
      
-  ## TODO: do i need this ?
+
+
+# TODO: do i need this ?
 # - name: start vault
 #   service:
-#     name: vault => see if right
+#     name: vault => see if righe
 #     state: started
 

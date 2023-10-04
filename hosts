@@ -13,10 +13,10 @@ all:
           ansible_python_interpreter: /usr/local/bin/python3.9
         baerendreck:
           ansible_host: 68.183.12.8
-          ansible_user: "{{ host_sshd_user }}"
-          ansible_port: "{{ host_sshd_port }}"
-          #ansible_user: root
-          #ansible_port: 22
+          #ansible_user: "{{ host_sshd_user }}"
+          #ansible_port: "{{ host_sshd_port }}"
+          ansible_user: root
+          ansible_port: 22
     jails:
       hosts:
         emails_eco:
