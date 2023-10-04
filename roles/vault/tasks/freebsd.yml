@@ -21,11 +21,9 @@
 - name: vault enable 
   shell: sysrc vault_enable="YES" && sysrc vault_syslog_output_enable="YES"
 
-- name: start vault 
-  shell: service vault start
 
-- name: initialize vault
-  shell: env VAULT_ADDR=http://10.10.0.33:8200 vault operator init
+    #- name: initialize vault
+  #shell: env VAULT_ADDR=http://10.10.0.33:8200 vault operator init
 
 - name: copy config.hcl 
   template: 
@@ -33,4 +31,7 @@
     dest: /usr/local/etc/vault.hcl
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
+
+- name: start vault 
+  shell: service vault start
 

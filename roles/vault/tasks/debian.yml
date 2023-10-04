@@ -5,7 +5,6 @@
   apt:
     upgrade: yes
     update_cache: yes
-    cache_valid_time: 86400
 
 - name: config file copy
   template:
@@ -39,14 +38,6 @@
   shell:
     cmd: sudo apt install vault
 
-
-
-- name: vault.service file copy
-  template:
-    src: ../templates/vault.service
-    dest: /etc/systemd/system
-    owner: "{{ vault_user }}"
-    group: "{{ vault_group }}"
 
 
 #- name: restart vault
