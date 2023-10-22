@@ -1,0 +1,15 @@
+---
+
+
+physical_server: learnhouse
+hostname: startup.school.nz.kfos-internal
+
+needs_nginx: true
+project_domain: 'startup.school.nz'
+project_user: startup_school
+project_group: startup_school
+project_atom: startup_school
+project_module: Startup_School
+project_port: 4040
+project_http_port: 3001
+project_style: umbrella

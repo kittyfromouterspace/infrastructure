@@ -1,0 +1,50 @@
+upstream grafana {
+    server  127.0.0.1:3000;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name    {{ project_domain }} www.{{ project_domain }};
+
+    access_log  /var/log/nginx/monitoring.access.log;
+
+    location /.well-known/acme-challenge {
+        root /usr/local/etc/letsencrypt;
+        allow all;
+    }
+
+    return 301 https://$host$request_uri;
+
+}
+
+server {
+    listen         443 ssl http2;
+    listen         [::]:443 ssl http2;
+    server_name    {{ project_domain }} www.{{ project_domain }};
+
+    root /usr/local/www;
+
+    access_log  /var/log/nginx/monitoring.access.log;
+
+    ssl_certificate /usr/local/etc/letsencrypt/live/{{ project_domain }}/cert.pem;
+    ssl_certificate_key /usr/local/etc/letsencrypt/live/{{ project_domain }}/privkey.pem;
+    ssl_trusted_certificate /usr/local/etc/letsencrypt/live/{{ project_domain }}/fullchain.pem;
+
+    # be careful with transport security it may come back and haunt you!
+    # add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+
+    location /.well-known/acme-challenge {
+        root /usr/local/etc/letsencrypt;
+        allow all;
+    }
+
+    location / {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_pass http://grafana/;
+    }
+}

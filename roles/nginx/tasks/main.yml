@@ -1,0 +1,5 @@
+---
+
+- name: configure nginx
+  import_tasks: server.yml
+  when: needs_nginx is defined

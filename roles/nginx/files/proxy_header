@@ -1,0 +1,21 @@
+proxy_set_header       Host             ;
+proxy_set_header       X-Forwarded-Host ;
+proxy_set_header       X-Real-IP        ;
+proxy_set_header       X-Forwarded-For  ;
+proxy_set_header       X-Request-Is-SSL ;
+#proxy_set_header       X-Country        ;
+
+# add HSTS and other security related headers
+add_header  Strict-Transport-Security max-age=63072000;
+add_header  X-Content-Type-Options nosniff;
+
+# enable browser XSS protection filter
+# from https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+add_header  X-XSS-Protection '1; mode=block';
+
+# may be replaced/extended by CSP soon
+add_header  X-Frame-Options SAMEORIGIN;
+
+proxy_next_upstream    error invalid_header http_500 http_502 http_503;
+proxy_connect_timeout  2;
+proxy_intercept_errors on;

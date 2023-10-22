@@ -1,0 +1,8 @@
+---
+
+needs_nginx: true
+project_domain: 'tracker.kfos.nz'
+project_user: tracker
+project_group: tracker
+project_atom: tracker
+project_module: Tracker

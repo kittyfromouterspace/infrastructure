@@ -1,0 +1,120 @@
+# TODO:
+# - set up certbot cron
+# - fix www ssl subdomain
+---
+- name: Install nginx packages
+  pkgng:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - nginx
+    - '{{ host_python_flavor }}-certbot'
+
+# FIXME: this requires to switch off nginx or we need to change from
+# standalone to providing the webroot directory
+# - name: Call certbot to bootstrap SSL certs
+#   ansible.builtin.command:
+#     argv:
+#       - /usr/local/bin/certbot
+#       - certonld 
+#       - --standalone
+#       - -d {{ project_domain }}
+#       - -m info@kfos.nz
+#       - --non-interactive
+#       - --agree-tos
+#     creates: /usr/local/letsencrypt/live/{{ project_domain }}
+
+# - name: enable certbot cron
+#   ansible.builtin.cron:
+#     name: certbot cron
+#     minute: 3
+#     hour: 2
+#     weekday: 4
+#     job: /usr/local/bin/certbot renew
+
+- name: Create nginx directories
+  file: path={{ item }} state=directory owner=root
+  with_items:
+    - /usr/local/etc/nginx/sites
+    - /usr/local/etc/nginx/certs
+    - /usr/local/etc/nginx/conf.d
+    - /var/log/nginx
+
+- name: Remove nginx default virtualhost configuration file
+  file: path=/usr/local/etc/nginx/sites/default state=absent
+  notify:
+    - reload nginx
+  ignore_errors: true
+
+- name: Create nginx configuration files [stage 1]
+  copy:
+    src: '{{ item.src }}'
+    dest: '/usr/local/etc/nginx/{{ item.dest }}'
+    owner: 'root'
+    group: 'wheel'
+    mode: 0755
+  notify:
+    - reload nginx
+  with_items:
+    - {src: dhparam.pem, dest: certs/dhparam.pem}
+    - {src: proxy_header, dest: conf.d/proxy_header}
+
+- name: Create nginx configuration files [stage 2]
+  template:
+    src: '{{ item.src }}'
+    dest: '/usr/local/etc/nginx/{{ item.dest }}'
+  notify:
+    - reload nginx
+  with_items:
+    - {src: nginx_conf.j2, dest: nginx.conf}
+    - {src: project_multidomain.j2, dest: 'sites/{{ project_domain }}'}
+  when: additional_domain is defined
+
+- name: Create nginx configuration files [stage 2]
+  template:
+    src: '{{ item.src }}'
+    dest: '/usr/local/etc/nginx/{{ item.dest }}'
+  notify:
+    - reload nginx
+  with_items:
+    - {src: nginx_conf.j2, dest: nginx.conf}
+    - {src: project.j2, dest: 'sites/{{ project_domain }}'}
+  when: 
+    - additional_domain is undefined
+    - nginx_conf is undefined
+
+- name: Create nginx configuration files [stage 2]
+  template:
+    src: '{{ item.src }}'
+    dest: '/usr/local/etc/nginx/{{ item.dest }}'
+  notify:
+    - reload nginx
+  with_items:
+    - {src: nginx_conf.j2, dest: nginx.conf}
+    - {src: {{ nginx_conf }}.j2, dest: 'sites/{{ project_domain }}'}
+  when: 
+    - additional_domain is undefined
+    - nginx_conf is defined
+
+- name: Create nginx cache directries
+  file:
+    path: '{{ item }}'
+    owner: 'www'
+    group: 'www'
+    mode: 0775
+    state: directory
+  with_items:
+    - /var/run/nginx-cache/jscache
+
+- name: Configure nginx in rc.conf
+  community.general.sysrc:
+    name: nginx_enable
+    value: YES
+
+- name: start and enable all needed services
+  service:
+    name: {{ item }}
+    state: started
+    enabled: true
+  with_items:
+    - nginx
