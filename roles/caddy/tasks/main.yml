@@ -15,12 +15,12 @@
     name: caddy
     enabled: yes
 
-- name: Move Caddyfile
-  copy: 
-    src: ./../templates/Caddyfile
-    dest: ~/
-    owner: caddy_user
-    group: root
+    #- name: Move Caddyfile
+    #copy: 
+    #src: ./../templates/Caddyfile
+    #dest: ~/
+    #owner: caddy_user
+    #group: root
 
 - name: Start caddy
   service: 
