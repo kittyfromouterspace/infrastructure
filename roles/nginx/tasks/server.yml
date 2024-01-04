@@ -91,20 +91,20 @@
     - reload nginx
   with_items:
     - {src: nginx_conf.j2, dest: nginx.conf}
-    - {src: {{ nginx_conf }}.j2, dest: 'sites/{{ project_domain }}'}
+    - {src: '{{ nginx_conf }}.j2', dest: 'sites/{{ project_domain }}'}
   when: 
     - additional_domain is undefined
     - nginx_conf is defined
 
 - name: Create nginx cache directries
   file:
-    path: '{{ item }}'
+    path: {{ item }}
     owner: 'www'
     group: 'www'
     mode: 0775
     state: directory
   with_items:
-    - /var/run/nginx-cache/jscache
+    - '/var/run/nginx-cache/jscache'
 
 - name: Configure nginx in rc.conf
   community.general.sysrc:

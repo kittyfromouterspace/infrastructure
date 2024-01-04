@@ -5,6 +5,7 @@ host_sshd_user: ansible
 
 ssh_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAIMViZa8jce77Ra/Zo+AwpGJbL2gkjjvyD+nT3AHoxi # Lenz
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII+uI2S4lStnZ580OxsXdXgr0f6bmv/cPUOQHw7yghGg # Lenz new 
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICjbOSKGEG1qwcNPNMKtXNl+E8JPFAcpFnWvVz1uoEnc # Levin
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMHVimIdXN9pTW/HC0lqvk+hPVD/cIx3mtpFkthZksU # Levin Devbox
 

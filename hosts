@@ -1,26 +1,16 @@
-h vim: set syntax=yaml.ansible:
+# vim: set syntax=yaml:
 
 all:
   children:
     server:
       hosts:
-        phantasia:
-          #ansible_host: 95.179.135.97
-          # ansible_user: root
-          # ansible_port: 22
-          #ansible_port: "{{ host_sshd_port }}"
-          #ansible_user: "{{ host_sshd_user }}"
-          #ansible_python_interpreter: /usr/local/bin/python3.9
         baerendreck:
-          #ansible_host: 68.183.12.7
+          ansible_host: 164.92.155.179 
+          ansible_port: 22
+          ansible_user: "root"
+          #ansible_host: 178.128.240.70
           #ansible_user: "{{ host_sshd_user }}"
           #ansible_port: "{{ host_sshd_port }}"
-          # ansible_user: root
-          # ansible_port: 22
-        learnhouse:
-          ansible_host: 134.209.83.193
-          ansible_user: root
-          ansible_port: 22
     jails:
       hosts:
         emails_eco:

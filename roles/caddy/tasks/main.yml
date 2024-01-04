@@ -1,0 +1,6 @@
+---
+
+- name: Install caddy
+  apt: 
+    name: caddy
+    state: present

@@ -3,5 +3,6 @@
   roles:
     #- system
     #- haproxy
-    - nginx
+    #- nginx
+    - caddy
 
