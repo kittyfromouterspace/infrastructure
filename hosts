@@ -11,9 +11,3 @@ all:
           #ansible_host: 178.128.240.70
           #ansible_user: "{{ host_sshd_user }}"
           #ansible_port: "{{ host_sshd_port }}"
-    jails:
-      hosts:
-        emails_eco:
-          ansible_host: 10.10.10.2
-        termitelab:
-          ansible_host: 10.10.10.3

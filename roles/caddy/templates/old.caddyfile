@@ -1,0 +1,38 @@
+{
+	"module": "zerossl",
+		"ca": "https://acme-v02.api.letsencrypt.org/directory",
+		"test_ca": "https://acme-staging-v02.api.letsencrypt.org/directory",
+		"email": "",
+		"account_key": "",
+		"external_account": {
+			"key_id": "",
+			"mac_key": ""
+		},
+		"acme_timeout": 0,
+		"challenges": {▾
+			"http": {
+				"disabled": false,
+				"alternate_port": 0
+			},
+			"tls-alpn": {
+				"disabled": false,
+				"alternate_port": 0
+			},
+			"dns": {
+				"provider": {•••},
+				"ttl": 0,
+				"propagation_delay": 0,
+				"propagation_timeout": 0,
+				"resolvers": [""],
+				"override_domain": ""
+			},
+			"bind_host": ""
+		},
+		"trusted_roots_pem_files": [""],
+		"preferred_chains": {
+			"smallest": false,
+			"root_common_name": [""],
+			"any_common_name": [""]
+		},
+		"api_key": "4899f3aa204e1ab30309246680d4210f"
+}

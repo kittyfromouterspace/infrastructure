@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - role: caddy
+      caddy_config: |
+        localhost
+        encode gzip
+        file_server browse {
+            root /home/files/
+        }

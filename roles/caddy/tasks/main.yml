@@ -1,6 +1,29 @@
 ---
 
+- name: Create Caddy User
+  user:
+    name: caddy_user
+    group: root 
+
 - name: Install caddy
   apt: 
     name: caddy
     state: present
+
+- name: Enable caddy
+  service:
+    name: caddy
+    enabled: yes
+
+- name: Move Caddyfile
+  copy: 
+    src: ./../templates/Caddyfile
+    dest: ~/
+    owner: caddy_user
+    group: root
+
+- name: Start caddy
+  service: 
+    name: caddy
+    state: started
+
