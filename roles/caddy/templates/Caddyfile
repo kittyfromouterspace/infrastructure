@@ -1,7 +1,7 @@
 *.elitedomains.de {
 
 	tls {
-		cert_issuer zerossl 4899f3aa204e1ab30309246680d4210f
+		issuer zerossl 4899f3aa204e1ab30309246680d4210f
 	}
 
 }

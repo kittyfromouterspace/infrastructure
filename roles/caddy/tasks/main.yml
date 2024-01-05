@@ -10,16 +10,19 @@
     name: caddy
     state: present
 
-    #- name: Move Caddyfile
-    #copy: 
-    #src: ./../templates/Caddyfile
-    #dest: ~/
-    #owner: caddy_user
-    #group: root
+- name: Move Caddyfile
+  copy: 
+    src: ./../templates/Caddyfile
+    dest: ~/
+    owner: ansible_caddy
+    group: root
 
 - name: Enable and start caddy
   service:
     name: caddy
-    state: started
+    state: restarted
     enabled: yes
+
+- name: Format and Reload Caddy 
+  shell: caddy fmt Caddyfile && caddy reload
 
