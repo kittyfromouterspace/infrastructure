@@ -2,18 +2,13 @@
 
 - name: Create Caddy User
   user:
-    name: caddy_user
+    name: ansible_caddy
     group: root 
 
 - name: Install caddy
   apt: 
     name: caddy
     state: present
-
-- name: Enable caddy
-  service:
-    name: caddy
-    enabled: yes
 
     #- name: Move Caddyfile
     #copy: 
@@ -22,8 +17,9 @@
     #owner: caddy_user
     #group: root
 
-- name: Start caddy
-  service: 
+- name: Enable and start caddy
+  service:
     name: caddy
     state: started
+    enabled: yes
 
